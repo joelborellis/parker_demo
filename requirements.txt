@@ -1,5 +1,6 @@
 matplotlib
 sklearn
+plotly
 openai
 pinecone-client
 pandas
