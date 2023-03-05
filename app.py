@@ -5,10 +5,6 @@ from openai.embeddings_utils import get_embedding
 import json
 import pandas as pd
 
-#OPENAI_KEY = "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"
-#PINECONE_KEY = "92df5f6e-f10d-49ed-9881-cdb86e161331"
-#INDEX = 'parker-new'
-
 OPENAI_KEY = st.secrets["OPENAI_KEY"]
 PINECONE_KEY = st.secrets["PINECONE_KEY"]
 INDEX = st.secrets["INDEX"]
