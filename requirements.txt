@@ -1,4 +1,4 @@
 openai
 pinecone-client
-json
+jsonlib
 pandas
