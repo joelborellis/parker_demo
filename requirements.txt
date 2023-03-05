@@ -1,3 +1,5 @@
+matplotlib
+sklearn
 openai
 pinecone-client
 pandas
