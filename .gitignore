@@ -1,0 +1,5 @@
+### DO NOT INCLUDE IN GIT REPO ###
+#local for vscode env
+.venv/
+#for secrets files locally
+.streamlit/secrets.toml
