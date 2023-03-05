@@ -82,7 +82,7 @@ def create_context(question, index, mappings, lib_meta, max_len=3750, top_k=5):
 def answer_question(
     index,
     mappings,
-    fine_tuned_qa_model="text-davinci-002",
+    fine_tuned_qa_model="text-davinci-003",
     question="What is the goal of the PW approval process?",
     instruction="Answer the question based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext:\n{0}\n\n---\n\nQuestion: {1}\nAnswer:",
     max_len=3550,
@@ -125,7 +125,7 @@ def answer_question(
             frequency_penalty=0,
             presence_penalty=0,
             stop=stop_sequence,
-            **model_param,
+            **model_param
         )
         #usage_dict = json.loads(response)
         #print(response["usage"])
@@ -232,7 +232,7 @@ st.sidebar.write(f"""
 
     **Vector dimensionality**: {dims}
 
-    **OpenAI generation model**: *text-davinci-002*
+    **OpenAI generation model**: *text-davinci-003*
 
     ---
 
@@ -288,6 +288,6 @@ if search.button("Go!") or query != "":
     tab_prompt.write(answer)
     for source in sources:
             tab_sources.write(source['TITLE'])
-    tab_usage.write("Completion Tokens:  " + str(tokens["completion_tokens"]))
-    tab_usage.write("Prompt Tokens:  " + str(tokens["prompt_tokens"]))
-    tab_usage.write("Total Tokens:  " + str(tokens["total_tokens"]))
+    tab_usage.write("Completion Tokens:  " + "**" + str(tokens["completion_tokens"]) + "**")
+    tab_usage.write("Prompt Tokens:  " + "**" + str(tokens["prompt_tokens"]) + "**")
+    tab_usage.write("Total Tokens:  " + "**" + str(tokens["total_tokens"]) + "**")
