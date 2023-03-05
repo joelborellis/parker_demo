@@ -74,8 +74,8 @@ def create_context(question, index, mappings, lib_meta, max_len=3750, top_k=5):
             cur_len -= row['metadata']['n_tokens'] + 4
             if max_len - cur_len < 200:
                 break
-    df = pd.DataFrame(sources)
-    print(df)
+    #df = pd.DataFrame(sources)
+    #print(df)
     return "\n\n###\n\n".join(contexts), sources
 
 
@@ -106,8 +106,8 @@ def answer_question(
         top_k=top_k
     )
     # if debug:
-    print("Context:\n" + context)
-    print("\n\n")
+    #print("Context:\n" + context)
+    #print("\n\n")
     try:
         # fine-tuned models requires model parameter, whereas other models require engine parameter
         model_param = (
@@ -128,7 +128,7 @@ def answer_question(
             **model_param,
         )
         #usage_dict = json.loads(response)
-        print(response["usage"])
+        #print(response["usage"])
         return response["choices"][0]["text"].strip(), response["usage"],  sources, instruction.format(context, question)
     except Exception as e:
         print(e)
@@ -238,11 +238,9 @@ st.sidebar.write(f"""
 
     ### How it Works
 
-    The Q&A tool takes discussions and docs from some of the best Python ML
-    libraries and collates their content into a natural language search and Q&A tool.
+    This tool has pre-loaded several process documents from Parker Welbore
 
-    Ask questions like **"How do I use the gradient tape in tensorflow?"** or **"What is the difference
-    between Tensorflow and PyTorch?"**, choose a answer style, and return relevant results!
+    Users can ask questions like **"Explan the contract management process?"** or **"What is the role of the ELT in due diligence?"**, choose a answer style, and return relevant results!
     
     The app is powered using OpenAI's embedding service with Pinecone's vector database. The whole process consists
     of *three* steps:
@@ -253,21 +251,14 @@ st.sidebar.write(f"""
 
     **3**. Relevant pages are passed in a new question to OpenAI's generative model, returning our answer.
 
-    **How do I make something like this?**
-
-    It's easy! Learn how to [integrate OpenAI and Pinecone here](https://www.pinecone.io/docs/integrations/openai/)!
-
     ---
 
     ### Usage
-    
-    If you'd like to restrict your search to a specific library (such as PyTorch or
-    Streamlit) you can with the *Advanced Options* dropdown. The source of information
-    can be switched between official docs and forum discussions too!
 
-    If you'd like OpenAI to consider more or less pages, try changing the `top_k` slider.
+    If you'd like OpenAI to consider more or less pages, try changing the `top_k` slider.  
 
-    Want to see the original sources that GPT-3 is using to generate the answer? No problem, just click on the **Sources** box.
+    The Tabs panel at the bottom displays the **Promt** that was sent to the model, the **Sources** that were useed for the promot and the number of **Tokens** used.
+     
     """)
 
 if search.button("Go!") or query != "":
