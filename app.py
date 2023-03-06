@@ -3,7 +3,7 @@ import pinecone
 import openai
 from openai.embeddings_utils import get_embedding
 import json
-import pandas as pd
+#import pandas as pd
 
 OPENAI_KEY = st.secrets["OPENAI_KEY"]
 PINECONE_KEY = st.secrets["PINECONE_KEY"]
@@ -12,11 +12,7 @@ INDEX = st.secrets["INDEX"]
 instructions = {
     "conservative q&a": "Answer the question based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext:\n{0}\n\n---\n\nQuestion: {1}\n\nAnswer:",
     "paragraph about a question": "Write a paragraph based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext:\n{0}\n\n---\n\nQuestion: {1}\n\nAnswer:",
-    "bullet points": "Write a bullet point list based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext:\n{0}\n\n---\n\nQuestion: {1}\n\nAnswer:",
-    "summarize problems given a topic": "Write a summary of the problems addressed by the questions below\"\n\n{0}\n\n---\n\n",
-    "extract key libraries and tools": "Write a list of libraries and tools present in the context below\"\n\nContext:\n{0}\n\n---\n\n",
-    "simple instructions": "{1} given the common questions and answers below \n\n{0}\n\n---\n\n",
-    "summarize": "Write an elaborate, paragraph long summary about \"{1}\" given the questions and answers from a public forum on this topic\n\n{0}\n\n---\n\nSummary:",
+    "bullet points": "Write a bullet point list based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext:\n{0}\n\n---\n\nQuestion: {1}\n\nAnswer:"
 }
 
 
@@ -57,8 +53,8 @@ def create_context(question, index, mappings, lib_meta, max_len=3750, top_k=5):
     res = index.query(
         q_embed, top_k=top_k,
         include_metadata=True, filter={
-            # 'TITLE'.lower: {'$in': lib_meta}
-            'TITLE': {'$in': ["Contract Management", "Contracting-Drilling and Well Services", "Due Diligence - New Market Entry", "Proposal Management Process"]}
+            'source': {'$in': lib_meta}
+            #'source': {'$in': ["Contract Management", "Contracting-Drilling and Well Services", "Due Diligence - New Market Entry", "Proposal Management Process"]}
         })
     cur_len = 0
     contexts = []
@@ -91,8 +87,8 @@ def answer_question(
     debug=False,
     max_tokens=400,
     stop_sequence=None,
-    domains=["Contract Management", "Contracting-Drilling and Well Services",
-             "Due Diligence - New Market Entry", "Proposal Management Process"],
+    domains=["contract management.txt", "contracting-drilling & well services.txt",
+             "due diligence - new market entry.txt", "proposal management process.txt"],
 ):
     """
     Answer a question based on the most similar context from the dataframe texts
@@ -153,12 +149,12 @@ def search(index, text_map, query, style, top_k, lib_filters):
         with st.expander("Sources"):
             for source in sources:
                 st.write(f"""
-                {source['TITLE']})
+                {source['source']})
                 """)
 
 
 st.set_page_config(
-    page_title="Parker Welbore POC",
+    page_title="Parker Wellbore POC",
     page_icon="images/GTL.png",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -173,10 +169,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 libraries = [
-    "Contract Management",
-    "Contracting-Drilling and Well Services",
-    "Due Diligence - New Market Entry",
-    "Proposal Management Process"
+    "contract management.txt",
+    "contracting-drilling & well services.txt",
+    "due diligence - new market entry.txt",
+    "proposal management process.txt"
 ]
 
 with st.spinner("Connecting to OpenAI..."):
@@ -187,16 +183,14 @@ with st.spinner("Connecting to PINECONE..."):
     text_map = init_key_value()
 
 
-st.write("# Parker Welbore Document Search ")
+st.write("# Parker Wellbore Document Search ")
 search = st.container()
 query = search.text_input('Ask a question about a document!', "")
 
 with search.expander("Search Options"):
     style = st.radio(label='Style', options=[
         'Paragraph about a question', 'Conservative Q&A',
-        'Bullet points', 'Summarize problems given a topic',
-        'Extract key libraries and tools', 'Simple instructions',
-        'Summarize'
+        'Bullet points'
     ])
 
     # add section for filters
@@ -287,7 +281,7 @@ if search.button("Go!") or query != "":
     tab_prompt.write(prompt)
     tab_prompt.write(answer)
     for source in sources:
-            tab_sources.write(source['TITLE'])
+            tab_sources.write(source['source'])
     tab_usage.write("Completion Tokens:  " + "**" + str(tokens["completion_tokens"]) + "**")
     tab_usage.write("Prompt Tokens:  " + "**" + str(tokens["prompt_tokens"]) + "**")
     tab_usage.write("Total Tokens:  " + "**" + str(tokens["total_tokens"]) + "**")
