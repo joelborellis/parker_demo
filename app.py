@@ -54,7 +54,7 @@ def create_context(question, index, mappings, lib_meta, max_len=3750, top_k=5):
         q_embed, top_k=top_k,
         include_metadata=True, filter={
             'source': {'$in': lib_meta}
-            #'source': {'$in': ["Contract Management", "Contracting-Drilling and Well Services", "Due Diligence - New Market Entry", "Proposal Management Process"]}
+            # 'source': {'$in': ["Contract Management", "Contracting-Drilling and Well Services", "Due Diligence - New Market Entry", "Proposal Management Process"]}
         })
     cur_len = 0
     contexts = []
@@ -70,8 +70,8 @@ def create_context(question, index, mappings, lib_meta, max_len=3750, top_k=5):
             cur_len -= row['metadata']['n_tokens'] + 4
             if max_len - cur_len < 200:
                 break
-    #df = pd.DataFrame(sources)
-    #print(df)
+    # df = pd.DataFrame(sources)
+    # print(df)
     return "\n\n###\n\n".join(contexts), sources
 
 
@@ -102,8 +102,8 @@ def answer_question(
         top_k=top_k
     )
     # if debug:
-    #print("Context:\n" + context)
-    #print("\n\n")
+    # print("Context:\n" + context)
+    # print("\n\n")
     try:
         # fine-tuned models requires model parameter, whereas other models require engine parameter
         model_param = (
@@ -123,8 +123,8 @@ def answer_question(
             stop=stop_sequence,
             **model_param
         )
-        #usage_dict = json.loads(response)
-        #print(response["usage"])
+        # usage_dict = json.loads(response)
+        # print(response["usage"])
         return response["choices"][0]["text"].strip(), response["usage"],  sources, instruction.format(context, question)
     except Exception as e:
         print(e)
@@ -187,32 +187,40 @@ st.write("# Parker Wellbore Document Search ")
 search = st.container()
 query = search.text_input('Ask a question about a document!', "")
 
-with search.expander("Search Options"):
-    st.write("""#### Choose Response Style """)
-    style = st.radio(label='Style', options=[
+style = st.radio(label='Answer Return Style', options=[
         'Paragraph about a question', 'Conservative Q&A',
         'Bullet points'
     ])
 
+# with search.expander("Search Options"):
+#    st.write("""#### Choose Response Style """)
+#    style = st.radio(label='Style', options=[
+#        'Paragraph about a question', 'Conservative Q&A',
+#        'Bullet points'
+#    ])
+
     # add section for filters
-    st.write("""
-        #### Documents
-        """)
+#st.write("""
+#            #### Documents
+#            """)
     # create two cols
-    cols = st.columns(2)
+#cols = st.columns(2)
     # add filtering based on library
-    lib_filters = {}
-    for lib in libraries:
-        i = len(lib_filters.keys()) % 2
-        with cols[i]:
-            lib_filters[lib] = st.checkbox(lib, value=True)
-    st.write("---")
-    top_k = st.slider(
+#lib_filters = {}
+#lib_filters = libraries
+#for lib in libraries:
+#        i = len(lib_filters.keys()) % 2
+#        with cols[i]:
+#            lib_filters[lib] = st.checkbox(lib, value=True)
+
+top_k = st.slider(
         "top_k",
         min_value=1,
         max_value=20,
         value=5
     )
+
+st.write("---")
 
 st.sidebar.write(f"""
     ### Info
@@ -257,8 +265,9 @@ st.sidebar.write(f"""
 if search.button("Go!") or query != "":
     with st.spinner("Retrieving, please wait..."):
         # lowercase relevant lib filters
-        lib_meta = [lib.lower()
-                    for lib in lib_filters.keys() if lib_filters[lib]]
+        #lib_meta = [lib.lower()
+        #            for lib in lib_filters.keys() if lib_filters[lib]]
+        lib_meta = libraries
         # ask the question
         #print("style:" + instructions[style.lower()])
         answer, tokens, sources, prompt = answer_question(
