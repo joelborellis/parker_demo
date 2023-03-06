@@ -48,8 +48,8 @@ def create_context(question, index, mappings, lib_meta, max_len=3750, top_k=5):
     Find most relevant context for a question via Pinecone search
     """
     q_embed = get_embedding(question, engine=f'text-embedding-ada-002')
-    # df = pd.DataFrame(lib_meta)
-    # print(df)
+    #df = pd.DataFrame(lib_meta)
+    #print(df)
     res = index.query(
         q_embed, top_k=top_k,
         include_metadata=True, filter={
@@ -188,6 +188,7 @@ search = st.container()
 query = search.text_input('Ask a question about a document!', "")
 
 with search.expander("Search Options"):
+    st.write("""#### Choose Response Style """)
     style = st.radio(label='Style', options=[
         'Paragraph about a question', 'Conservative Q&A',
         'Bullet points'
@@ -195,9 +196,7 @@ with search.expander("Search Options"):
 
     # add section for filters
     st.write("""
-        #### Metadata Filters
-
-        **Documents**
+        #### Documents
         """)
     # create two cols
     cols = st.columns(2)
