@@ -271,17 +271,20 @@ if search.button("Go!") or query != "":
         )
     # display the answer
     st.write(answer)
-    #with st.expander("Sources"):
-    #    for source in sources:
-    #        st.write(f"""
-    #            {source['TITLE']})
-    #            """)
-            
-    tab_prompt, tab_sources, tab_usage = st.tabs(["Prompt", "Sources", "Tokens"])
-    tab_prompt.write(prompt)
-    tab_prompt.write(answer)
+
+    tab_sources, tab_usage, tab_prompt = st.tabs(["Sources", "Tokens", "Prompt"])
+
+    #display the source
     for source in sources:
             tab_sources.write(source['source'])
+    
+    #display token counts
     tab_usage.write("Completion Tokens:  " + "**" + str(tokens["completion_tokens"]) + "**")
     tab_usage.write("Prompt Tokens:  " + "**" + str(tokens["prompt_tokens"]) + "**")
     tab_usage.write("Total Tokens:  " + "**" + str(tokens["total_tokens"]) + "**")
+    total_cost = (tokens["total_tokens"]/1000) *0.0200
+    tab_usage.write("Davinci" + "\t\t" + "v2" + "\t$" + '%.8s' %str(total_cost))
+
+    #display the prompt and answer
+    tab_prompt.write(prompt)
+    tab_prompt.write(answer)
