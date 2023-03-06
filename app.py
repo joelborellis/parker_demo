@@ -141,9 +141,9 @@ def search(index, text_map, query, style, top_k, lib_filters):
                 top_k=top_k
             )
             # lowercase relevant lib filters
-            lib_meta = [lib.lower()
-                        for lib in lib_filters.keys() if lib_filters[lib]]
-            lower_libs = [lib.lower() for lib in libraries]
+            #lib_meta = [lib.lower()
+            #            for lib in lib_filters.keys() if lib_filters[lib]]
+            #lower_libs = [lib.lower() for lib in libraries]
         # display the answer
         st.write(answer)
         with st.expander("Sources"):
@@ -239,7 +239,7 @@ st.sidebar.write(f"""
 
     ### How it Works
 
-    This tool has pre-loaded several process documents from Parker Welbore
+    This tool has pre-loaded several process documents from Parker Wellbore
 
     Users can ask questions like **"Explan the contract management process?"** or **"What is the role of the ELT in due diligence?"**, choose a answer style, and return relevant results!
     
