@@ -291,7 +291,7 @@ if search.button("Go!") or query != "":
     tab_usage.write("Prompt Tokens:  " + "**" + str(tokens["prompt_tokens"]) + "**")
     tab_usage.write("Total Tokens:  " + "**" + str(tokens["total_tokens"]) + "**")
     total_cost = (tokens["total_tokens"]/1000) *0.0200
-    tab_usage.write("Davinci" + "\t\t" + "v2" + "\t$" + '%.8s' %str(total_cost))
+    tab_usage.write("Davinci" + "\t\t" + " - v2 - " + "\t$" + '%.8s' %str(total_cost))
 
     #display the prompt and answer
     tab_prompt.write(prompt)
