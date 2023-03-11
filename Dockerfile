@@ -10,4 +10,4 @@ COPY . .
 
 RUN pip3 install -r requirements.txt
 
-CMD streamlit run app.py
+CMD streamlit run ./app/app.py
