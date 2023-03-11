@@ -5,3 +5,4 @@ scipy
 openai
 pinecone-client
 pandas
+streamlit
